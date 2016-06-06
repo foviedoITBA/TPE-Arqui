@@ -8,6 +8,6 @@ extern void	_cli(void);
 extern void _lidt(Idtr * idtr);
 extern void _sidt(Idtr * idtr);
 extern void _keyboard_ISR();
-extern void _mask_for_keyboard();
+extern void _pic_mask(uint16_t mask);
 
 #endif

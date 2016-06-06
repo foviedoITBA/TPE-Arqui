@@ -3,7 +3,7 @@ global _sti
 global _lidt
 global _sidt
 global _keyboard_ISR
-global _mask_for_keyboard
+global _pic_mask
 extern _key_handler
 section .text
 
@@ -24,7 +24,6 @@ _sidt:
 	ret
 
 _keyboard_ISR:
-	;hlt			; para ver si entra a la rutina, trato de colgar la máquina para que no se reinicie
 	push rdi
 	xor rax, rax
 	in al, 0x64		; verify there's
@@ -40,9 +39,9 @@ fin:
 	pop rdi
 	iretq
 
-_mask_for_keyboard:
+_pic_mask:
 	push rax
-	mov ax, 0xFFFD	; enable only IRQ1 (keyboard)
+	mov rax, rdi
 	out 21h, al
 	pop rax
 	ret
