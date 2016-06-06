@@ -24,6 +24,7 @@ _sidt:
 	ret
 
 _keyboard_ISR:
+	;hlt			; para ver si entra a la rutina, trato de colgar la máquina para que no se reinicie
 	push rdi
 	xor rax, rax
 	in al, 0x64		; verify there's
