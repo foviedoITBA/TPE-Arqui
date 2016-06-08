@@ -3,8 +3,12 @@
 #include "videoDriver.h"
 #include <stdint.h>
 
-#define IDT_SIZE 0x24
+
+#define IDT_SIZE 0x80
 #define KEYBOARD_VECTOR 0x21
+#define TIMER_TICK_VECTOR 0x20
+#define CODE_SEGMENT_SELECTOR 0x8 /* index = 1, TI = 0 (GDT, not LDT), RPL = 0 (maximum privilege) */
+#define TYPE_ATTR 0x8E /* Present, interrupt gate */
 
 Idtr idtr;
 Idt_Desc idt[IDT_SIZE];
@@ -17,26 +21,26 @@ void initializeIDT()
 	idtr.offset = (uint64_t) idt;
 	_lidt(&idtr);
 
-	/* Set up keyboard interrupt (keyboard ---> IRQ1 ---> vector 0x21)*/
-	uint64_t offset = (uint64_t)_keyboard_ISR;
+	/* Set up keyboard interrupt (keyboard ---> IRQ1 ---> vector 0x21) */
+	add_IDT_descriptor(KEYBOARD_VECTOR, (uint64_t)_keyboard_ISR);
+	/* Set up timer tick interrupt (PIT ---> IRQ0 ---> vector 0x20) */
+	add_IDT_descriptor(TIMER_TICK_VECTOR, (uint64_t)_PIT_ISR);
 
-	idt[KEYBOARD_VECTOR].offset_l = (uint16_t) (offset & 0xFFFF);
-	idt[KEYBOARD_VECTOR].offset_m = (uint16_t) ((offset >> 16) & 0xFFFF);
-	idt[KEYBOARD_VECTOR].offset_h = (uint32_t) (offset >> 32);
-	idt[KEYBOARD_VECTOR].selector = (uint16_t) 0x8;	/* index = 1, TI = 0 (GDT, not LDT), RPL = 0 (maximum privilege) */
-	idt[KEYBOARD_VECTOR].zero_8_bits = (uint8_t) 0;
-	idt[KEYBOARD_VECTOR].zero_32_bits = (uint32_t) 0;
-	idt[KEYBOARD_VECTOR].type_attr = (uint8_t) 0x8E; /* Present, ¿32 bits? interrupt gate */
-
-	/* Disable all but keyboard interrupt */
-	_pic_mask(0xFFFD);
+	/* Enable only keyboard and timer tick */
+	_pic_mask(0xFFFC);
 
 	// Enable interrupts
 	_sti();
 
 }
 
-void _key_handler(uint64_t key_scan_code)
+void add_IDT_descriptor(uint32_t index, uint64_t ISR)
 {
-	print_msg("Keyboard interrupt\n", RED, WHITE);
+	idt[index].offset_l = (uint16_t) (ISR & 0xFFFF);
+	idt[index].offset_m = (uint16_t) ((ISR >> 16) & 0xFFFF);
+	idt[index].offset_h = (uint32_t) (ISR >> 32);
+	idt[index].selector = (uint16_t) CODE_SEGMENT_SELECTOR;
+	idt[index].zero_8_bits = (uint8_t) 0;
+	idt[index].zero_32_bits = (uint32_t) 0;
+	idt[index].type_attr = (uint8_t) TYPE_ATTR;
 }

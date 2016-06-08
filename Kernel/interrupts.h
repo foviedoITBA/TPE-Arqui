@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+void initializeIDT();
+void add_IDT_descriptor(uint32_t index, uint64_t ISR);
+
 #pragma pack(push)
 #pragma pack(1)
 

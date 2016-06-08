@@ -5,7 +5,10 @@
 #include <naiveConsole.h>
 #include "videoDriver.h"
 #include "interrupts.h"
+#include "keyboardDriver.h"
 #include "interruptsASM.h"
+#include "systemcalls.h"
+#include "RTC.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -18,6 +21,8 @@ static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
+
+static int sec, min, hrs;
 
 typedef int (*EntryPoint)();
 
@@ -50,7 +55,7 @@ void * initializeKernelBinary()
 	print_msg("Done\n", GREEN, BLUE);
 	print_msg("Clearing Kernel's bss... ", GREEN, BLUE);
 	clearBSS(&bss, &endOfKernel - &bss);
-	print_msg(" Done loading modules\n", GREEN, BLUE);
+	print_msg("Done loading modules\n", GREEN, BLUE);
 
 	print_msg("Setting up stack...\n", GREEN, BLUE);
 	return getStackBase();
@@ -66,8 +71,21 @@ int main()
 	initializeIDT();
 	print_msg("Done\n", GREEN, BLUE);
 
+	print_msg("Setting up system calls... ", GREEN, BLUE);
+	setupSystemcalls();
+	print_msg("Done\n", GREEN, BLUE);
+
 	reset_position();
 	
 	while(1);
 	return 0;
+}
+
+void update_clock()
+{
+	sec = _get_seconds();
+	min = _get_minutes();
+	hrs = _get_hours();
+
+	print_time(sec, min, hrs);
 }

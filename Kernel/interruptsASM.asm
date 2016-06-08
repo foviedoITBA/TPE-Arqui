@@ -3,8 +3,11 @@ global _sti
 global _lidt
 global _sidt
 global _keyboard_ISR
+global _PIT_ISR
+global _systemcalls_ISR
 global _pic_mask
-extern _key_handler
+extern key_handler
+extern update_clock
 section .text
 
 _cli:
@@ -32,11 +35,20 @@ _keyboard_ISR:
 	jne fin
 	in al, 0x60		; read key
 	mov rdi, rax
-	call _key_handler
+	call key_handler
 fin:
 	mov al, 20h
 	out 20h, al		; EOI
 	pop rdi
+	iretq
+
+_PIT_ISR:
+	call update_clock
+	mov al, 20h
+	out 20h, al		; EOI
+	iretq
+
+_systemcalls_ISR:
 	iretq
 
 _pic_mask:

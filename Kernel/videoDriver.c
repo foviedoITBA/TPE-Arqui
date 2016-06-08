@@ -1,8 +1,9 @@
 #include "videoDriver.h"
 
 #define SCREEN_WIDTH 80
-#define SCREEN_HEIGHT 25
+#define SCREEN_HEIGHT 24 /* Last row reserver for clock */
 #define BLACK_ON_BLACK 0
+#define WHITE_ON_BLACK 7
 #define FOREGROUND_INTENSITY_MASK 0x8
 #define BACKGROUND_INTENSITY_MASK 0x80
 #define IS_COLOR(x) (x >= 0 && x < 8 ? 1 : 0)
@@ -64,3 +65,34 @@ void print_msg(char * msg, int foreground_color, int background_color)
 	}
 }
 
+void print_time(int sec, int min, int hrs)
+{
+	char hrsH, hrsL, minH, minL, secH, secL;
+	hrsL = (char) (hrs & 0xF) + '0';
+	hrsH = ((char) ((hrs >> 4) & 0x7)) + '0';
+	minL = (char) (min & 0xF) + '0';
+	minH = ((char) ((min >> 4) & 0x7)) + '0';
+	secL = (char) (sec & 0xF) + '0';
+	secH = ((char) ((sec >> 4) & 0x7)) + '0';
+	
+	char currentTime[9];
+	currentTime[0] = hrsH;
+	currentTime[1] = hrsL;
+	currentTime[2] = ':';
+	currentTime[3] = minH;
+	currentTime[4] = minL;
+	currentTime[5] = ':';
+	currentTime[6] = secH;
+	currentTime[7] = secL;
+	currentTime[8] = '\0';
+
+	int i;
+	for (int i = 0; currentTime[i] != '\0'; i++)
+	{
+		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i) = currentTime[i];
+		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = WHITE_ON_BLACK;
+	}
+
+//	print_msg(currentTime, WHITE, BLACK);
+//	print_msg("\n", WHITE, BLACK);
+}
