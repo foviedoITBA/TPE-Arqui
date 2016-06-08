@@ -39,5 +39,4 @@ void initializeIDT()
 void _key_handler(uint64_t key_scan_code)
 {
 	print_msg("Keyboard interrupt\n", RED, WHITE);
-	// while(1) // Trato de colgar la máquina acá para ver si la ejecición llega a esta función
 }
