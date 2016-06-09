@@ -90,7 +90,7 @@ void print_time(int sec, int min, int hrs)
 	for (int i = 0; currentTime[i] != '\0'; i++)
 	{
 		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i) = currentTime[i];
-		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = WHITE_ON_BLACK;
+		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = WHITE | (BLACK << 4) | FOREGROUND_INTENSITY_MASK | BACKGROUND_INTENSITY_MASK;
 	}
 
 //	print_msg(currentTime, WHITE, BLACK);

@@ -8,6 +8,7 @@ global _systemcalls_ISR
 global _pic_mask
 extern key_handler
 extern update_clock
+extern systemcalls_dispatcher
 section .text
 
 _cli:
@@ -49,6 +50,19 @@ _PIT_ISR:
 	iretq
 
 _systemcalls_ISR:
+	push rbp
+	mov rbp, rsp
+	push rdi
+	push rsi
+	push rdx
+	mov rdi, rax
+	mov rsi, rbx
+	mov rdx, rcx
+	call systemcalls_dispatcher
+	pop rdx
+	pop rsi
+	pop rdi
+	leave
 	iretq
 
 _pic_mask:

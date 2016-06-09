@@ -74,8 +74,6 @@ int main()
 	print_msg("Setting up system calls... ", GREEN, BLUE);
 	setupSystemcalls();
 	print_msg("Done\n", GREEN, BLUE);
-
-	reset_position();
 	
 	while(1);
 	return 0;
