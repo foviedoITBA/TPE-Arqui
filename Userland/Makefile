@@ -1,18 +1,24 @@
 include Makefile.inc
 
-SAMPLE_DATA=0001-sampleDataModule.bin
+MODULE=console.bin
+SOURCES_C=console.c
+SOURCES_ASM=consoleASM.asm
+OBJECTS_C=$(SOURCES_C:.c=.o)
+OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
+OBJECTS=$(OBJECTS_C) $(OBJECTS_ASM)
 
-all: sampleCodeModule sampleDataModule
+all: $(MODULE)
 
-sampleCodeModule:
-	cd SampleCodeModule; make
+$(MODULE): $(OBJECTS)
+	$(LD) -T console.ld $(OBJECTS_C) $(OBJECTS_ASM) -o $(MODULE)
 
-sampleDataModule:
-	printf "This is sample data." >> $(SAMPLE_DATA) && dd if=/dev/zero bs=1 count=1 >> $(SAMPLE_DATA)
+%.o: %.c
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+%.o : %.asm
+	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
-	cd SampleCodeModule; make clean
-	rm -rf *.bin
+	rm -rf *.o
 
-
-.PHONY: sampleCodeModule all clean
+.PHONY: all clean

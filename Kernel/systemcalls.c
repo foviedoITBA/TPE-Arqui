@@ -1,12 +1,13 @@
 #include "systemcalls.h"
 #include "interrupts.h"
 #include "interruptsASM.h"
+#include "videoDriver.h"
 
 #define SYSTEMCALLS_VECTOR 0x80
 
 static uint64_t (*syscalls[4])();
-static uint64_t sys_write(char * buffer, uint64_t bytes);
-static uint64_t sys_read(char * buffer, uint64_t bytes);
+static uint64_t sys_write(uint64_t buffer, uint64_t bytes);
+static uint64_t sys_read(uint64_t buffer, uint64_t bytes);
 static uint64_t sys_malloc(uint64_t bytes);
 static uint64_t sys_free();
 
@@ -24,12 +25,13 @@ void systemcalls_dispatcher(uint64_t number, uint64_t first_parameter, uint64_t 
 	return (*syscalls[number])(first_parameter, second_parameter);
 }
 
-static uint64_t sys_write(char * buffer, uint64_t bytes)
+static uint64_t sys_write(uint64_t buffer, uint64_t bytes)
 {
+	video_write((char *) buffer, bytes);
 	return 0;
 }
 
-static uint64_t sys_read(char * buffer, uint64_t bytes)
+static uint64_t sys_read(uint64_t buffer, uint64_t bytes)
 {
 	return 0;
 }

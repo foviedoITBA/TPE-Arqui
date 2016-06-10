@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 
-#define IDT_SIZE 0x80
+#define IDT_SIZE 0xFF /* Arbitrario */
 #define KEYBOARD_VECTOR 0x21
 #define TIMER_TICK_VECTOR 0x20
 #define CODE_SEGMENT_SELECTOR 0x8 /* index = 1, TI = 0 (GDT, not LDT), RPL = 0 (maximum privilege) */

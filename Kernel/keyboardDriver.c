@@ -79,5 +79,5 @@ void key_handler(uint64_t key_scan_code)
 		active_table = shift_no_caps_table;
 	else
 		active_table = no_shift_no_caps_table;
-//	print_msg("Keyboard interrupt\n", RED, WHITE);
+
 }

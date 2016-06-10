@@ -65,6 +65,16 @@ void print_msg(char * msg, int foreground_color, int background_color)
 	}
 }
 
+void video_write(char * buffer, uint64_t bytes)
+{
+	char print_buffer[2] = {'\0', '\0'};
+	for (int i = 0; i < bytes; i++)
+	{
+		print_buffer[0] = buffer[i];
+		print_msg(print_buffer, WHITE, BLACK);
+	}
+}
+
 void print_time(int sec, int min, int hrs)
 {
 	char hrsH, hrsL, minH, minL, secH, secL;
@@ -93,6 +103,4 @@ void print_time(int sec, int min, int hrs)
 		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = WHITE | (BLACK << 4) | FOREGROUND_INTENSITY_MASK | BACKGROUND_INTENSITY_MASK;
 	}
 
-//	print_msg(currentTime, WHITE, BLACK);
-//	print_msg("\n", WHITE, BLACK);
 }

@@ -19,8 +19,9 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0x400000;
-static void * const sampleDataModuleAddress = (void*)0x500000;
+static void * const consoleAddress = (void*)0x400000;
+//static void * const sampleCodeModuleAddress = (void*)0x400000;
+//static void * const sampleDataModuleAddress = (void*)0x500000;
 
 static int sec, min, hrs;
 
@@ -44,8 +45,7 @@ void * getStackBase()
 void * initializeKernelBinary()
 {
 	void * moduleAddresses[] = {
-		sampleCodeModuleAddress,
-		sampleDataModuleAddress
+		consoleAddress
 	};
 	clear_screen();
 	print_msg("KERNEL\n\n", GREEN, BLUE);
@@ -63,10 +63,12 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	/*
 	print_msg("Calling sample code module...\n", GREEN, BLUE);
 	((EntryPoint)sampleCodeModuleAddress)();
 	print_msg("Done\n", GREEN, BLUE);
-	
+	*/
+
 	print_msg("Initializing IDT... ", GREEN, BLUE);
 	initializeIDT();
 	print_msg("Done\n", GREEN, BLUE);
@@ -75,6 +77,10 @@ int main()
 	setupSystemcalls();
 	print_msg("Done\n", GREEN, BLUE);
 	
+	print_msg("Calling console...\n", GREEN, BLUE);
+	((EntryPoint)consoleAddress)();
+	print_msg("Done\n", GREEN, BLUE);
+
 	while(1);
 	return 0;
 }
