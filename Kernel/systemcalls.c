@@ -10,6 +10,7 @@ static uint64_t sys_write(uint64_t buffer, uint64_t bytes);
 static uint64_t sys_read(uint64_t buffer, uint64_t bytes);
 static uint64_t sys_malloc(uint64_t bytes);
 static uint64_t sys_free();
+static void * mem = 0xA00000;
 
 void setupSystemcalls()
 {
@@ -38,7 +39,9 @@ static uint64_t sys_read(uint64_t buffer, uint64_t bytes)
 
 static uint64_t sys_malloc(uint64_t bytes)
 {
-	return 0;
+	void * aux = mem;
+	mem = ((char*) mem) + bytes;
+	return aux;
 }
 
 static uint64_t sys_free()

@@ -1,8 +1,8 @@
 include Makefile.inc
 
 MODULE=console.bin
-SOURCES_C=console.c
-SOURCES_ASM=consoleASM.asm
+SOURCES_C=console.c myStdlib.c
+SOURCES_ASM=$(wildcard *.asm)
 OBJECTS_C=$(SOURCES_C:.c=.o)
 OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 OBJECTS=$(OBJECTS_C) $(OBJECTS_ASM)

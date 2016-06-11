@@ -1,5 +1,5 @@
 #include "keyboardDriver.h"
-#include "videoDriver.h"
+#include "videoDriver.h" /* FOR DEBUGGING ONLY */
 
 #define BUFFER_SIZE 1024
 #define TABLE_SIZE 0x3B
@@ -79,5 +79,4 @@ void key_handler(uint64_t key_scan_code)
 		active_table = shift_no_caps_table;
 	else
 		active_table = no_shift_no_caps_table;
-
 }

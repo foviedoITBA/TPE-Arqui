@@ -12,6 +12,21 @@
 static char *video = (char *) 0xB8000;
 static int position = 0;
 
+static void check_position()
+{
+	if (position == SCREEN_WIDTH*SCREEN_HEIGHT)
+	{
+		for (int i = SCREEN_WIDTH; i < 2*position; i++)
+			video[i-2*SCREEN_WIDTH] = video[i];
+		for (int i = SCREEN_WIDTH*(SCREEN_HEIGHT-1); i < position; i++)
+		{
+			video[2*i] = ' ';
+			video[2*i+1] = BLACK_ON_BLACK;
+		}
+		position -= SCREEN_WIDTH;
+	}
+}
+
 void clear_screen()
 {
 	int i, j;
@@ -35,7 +50,8 @@ void print_msg(char * msg, int foreground_color, int background_color)
 		return;
 	attribute = foreground_color | (background_color << 4);
 	attribute = attribute | FOREGROUND_INTENSITY_MASK;
-	attribute = attribute | BACKGROUND_INTENSITY_MASK;
+	if (background_color != BLACK)
+		attribute = attribute | BACKGROUND_INTENSITY_MASK;
 	
 	for (i = 0; msg[i] != '\0'; i++)
 	{
@@ -45,6 +61,7 @@ void print_msg(char * msg, int foreground_color, int background_color)
 			while(newPosition <= position)
 				newPosition += SCREEN_WIDTH;
 			position = newPosition;
+			check_position();
 		}
 		else if (msg[i] == '\t')
 		{
@@ -54,6 +71,7 @@ void print_msg(char * msg, int foreground_color, int background_color)
 				video[2*position] = ' ';
 				video[2*position+1] = attribute;
 				position++;
+				check_position();
 			}
 		}	
 		else
@@ -61,6 +79,7 @@ void print_msg(char * msg, int foreground_color, int background_color)
 			video[2*position] = msg[i];
 			video[2*position+1] = attribute;
 			position++;
+			check_position();
 		}
 	}
 }
@@ -100,7 +119,7 @@ void print_time(int sec, int min, int hrs)
 	for (int i = 0; currentTime[i] != '\0'; i++)
 	{
 		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i) = currentTime[i];
-		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = WHITE | (BLACK << 4) | FOREGROUND_INTENSITY_MASK | BACKGROUND_INTENSITY_MASK;
+		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = BLACK | (WHITE << 4) | FOREGROUND_INTENSITY_MASK | BACKGROUND_INTENSITY_MASK;
 	}
 
 }

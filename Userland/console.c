@@ -1,7 +1,10 @@
-extern void _write(char * buffer, unsigned long int);
+#include "myStdlib.h"
 
 int main(void)
 {
-	_write("PRUEBA DE SYSTEMCALLS\n", 22);
+	char * buffer = malloc(50);
+	strcpy(buffer, "Hola, mundo");
+	printf("%s\n", buffer);
+	free(buffer);
 	return 0;
 }
