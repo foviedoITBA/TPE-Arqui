@@ -32,7 +32,10 @@ void clear_screen()
 	int i, j;
 	for (i = 0; i < SCREEN_HEIGHT; i++)
 		for (j = 0; j < SCREEN_WIDTH; j++)
-			*(video + 2*i*SCREEN_HEIGHT + 2*j) = BLACK_ON_BLACK;
+		{
+			*(video + 2*i*SCREEN_WIDTH + 2*j) = ' ';
+			*(video + 2*i*SCREEN_WIDTH + 2*j + 1) = BLACK_ON_BLACK;
+		}
 	reset_position();
 }
 
@@ -115,11 +118,17 @@ void print_time(int sec, int min, int hrs)
 	currentTime[7] = secL;
 	currentTime[8] = '\0';
 
-	int i;
 	for (int i = 0; currentTime[i] != '\0'; i++)
 	{
 		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i) = currentTime[i];
 		*(video + 2 * SCREEN_HEIGHT * SCREEN_WIDTH + 2*i + 1) = BLACK | (WHITE << 4) | FOREGROUND_INTENSITY_MASK | BACKGROUND_INTENSITY_MASK;
 	}
 
+}
+
+void video_remove_char()
+{
+	position--;
+	video[2*position] = ' ';
+	video[2*position+1] = BLACK_ON_BLACK;
 }

@@ -2,6 +2,12 @@
 #include <stdarg.h>
 
 #define PRINT_BUFFER_SIZE 1024
+#define BACKSPACE 8
+
+extern void * _malloc(int bytes);
+extern void _write(char * buffer, int size);
+extern void _read(volatile char * key_holder, int bytes);
+extern void _remove_char();
 
 int strlen(char s[])
 {
@@ -91,7 +97,7 @@ void printf(const char *format, ...)
 					break;
 
 				default:
-					print_buf[index++] = va_arg(arg_list, char);
+					print_buf[index++] = (char) va_arg(arg_list, int);
 					if (index == PRINT_BUFFER_SIZE)
 							break;
 					break;
@@ -107,6 +113,39 @@ void putchar(char c)
 	char buf[] = {c, '\0'};
 	_write(buf, sizeof buf);
 	return;
+}
+
+static void read(char * buffer, int bytes)
+{
+	int index = 0;
+	volatile char key_holder = '\0';
+	_read(&key_holder, bytes);
+	while(index < bytes)
+	{
+		if (key_holder == '\0')
+			continue;
+		else if (key_holder == BACKSPACE)
+		{
+			if (index > 0)
+			{
+				buffer[--index] = '\0';
+				_remove_char();			
+			}
+		}
+		else
+		{
+			buffer[index++] = key_holder;
+			putchar(key_holder);
+		}
+		if (key_holder == '\n')
+			break;
+		key_holder = '\0';
+	}
+}
+
+void scanf(char * buffer, int bytes)
+{
+	read(buffer, bytes);
 }
 
 void * malloc(int bytes)

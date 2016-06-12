@@ -2,7 +2,6 @@
 #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
-#include <naiveConsole.h>
 #include "videoDriver.h"
 #include "interrupts.h"
 #include "keyboardDriver.h"
@@ -63,12 +62,6 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	/*
-	print_msg("Calling sample code module...\n", GREEN, BLUE);
-	((EntryPoint)sampleCodeModuleAddress)();
-	print_msg("Done\n", GREEN, BLUE);
-	*/
-
 	print_msg("Initializing IDT... ", GREEN, BLUE);
 	initializeIDT();
 	print_msg("Done\n", GREEN, BLUE);
@@ -78,6 +71,7 @@ int main()
 	print_msg("Done\n", GREEN, BLUE);
 	
 	print_msg("Calling console...\n", GREEN, BLUE);
+	clear_screen();
 	((EntryPoint)consoleAddress)();
 	print_msg("Done\n", GREEN, BLUE);
 

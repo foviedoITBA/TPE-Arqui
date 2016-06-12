@@ -2,9 +2,13 @@
 
 int main(void)
 {
-	char * buffer = malloc(50);
-	strcpy(buffer, "Hola, mundo");
-	printf("%s\n", buffer);
-	free(buffer);
-	return 0;
+	char * buffer = malloc(1024);
+	while(1)
+	{
+		printf("$> ");
+		for (int i = 0; i < 1000; i++)
+			buffer[i] = '\0';
+		scanf(buffer, 1000);
+		printf("INVALID COMMAND: %s", buffer);
+	}
 }

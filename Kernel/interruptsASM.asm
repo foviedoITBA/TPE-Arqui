@@ -33,11 +33,11 @@ _keyboard_ISR:
 	in al, 0x64		; verify there's
 	and rax, 0x1	; a key
 	cmp rax, 0x1	; to be read
-	jne fin
+	jne end
 	in al, 0x60		; read key
 	mov rdi, rax
 	call key_handler
-fin:
+end:
 	mov al, 20h
 	out 20h, al		; EOI
 	pop rdi

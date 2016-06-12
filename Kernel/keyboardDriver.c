@@ -1,11 +1,12 @@
 #include "keyboardDriver.h"
 #include "videoDriver.h" /* FOR DEBUGGING ONLY */
+#include "systemcalls.h"
 
 #define BUFFER_SIZE 1024
 #define TABLE_SIZE 0x3B
 #define NULL_CHAR (char) 0
 #define ESC 1
-#define BACKSPACE 2
+#define BACKSPACE 8
 #define LEFT_SHIFT 3
 #define RIGHT_SHIFT 4
 #define CAPS 5
@@ -53,7 +54,10 @@ void key_handler(uint64_t key_scan_code)
 			break;
 		case BACKSPACE:
 			if (index > 0 && !is_break_code)
+			{
 				index--;
+				send_key((char) BACKSPACE);
+			}
 			break;
 		case LEFT_SHIFT:
 			left_shift = !is_break_code;
@@ -67,10 +71,15 @@ void key_handler(uint64_t key_scan_code)
 			break;
 		default:
 			if (!is_break_code)
+			{
 				keyboard_buffer[index++] = active_table[key_index];
+				send_key(active_table[key_index]);
+			}
 			break;
 	}
 	
+	index %= BUFFER_SIZE;
+
 	if ((left_shift || right_shift) && caps)
 		active_table = shift_caps_table;
 	else if (!(left_shift || right_shift) && caps)
