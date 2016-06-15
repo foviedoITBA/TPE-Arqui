@@ -3,6 +3,7 @@
 
 int strlen(char s[]);
 void strcpy(char target[], const char source[]);
+int strcmp(const char * str1, const char * str2);
 void printf(const char * format, ...);
 void putchar(char c);
 void * malloc(int bytes);

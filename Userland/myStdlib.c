@@ -23,6 +23,13 @@ void strcpy(char target[], const char source[])
 		target[i] = source[i];
 	target[i] = '\0';
 }
+
+int strcmp(const char * str1, const char * str2)
+{
+	int i;
+	for (i = 0; str1[i] == str2[i] && str1[i] != '\0' && str2[i] != '\0'; i++);
+	return (str2[i] - str1[i]);
+}
  
 /* AS FROM THE K&R2 BOOK */
 /* reverse:  reverse string s in place */
