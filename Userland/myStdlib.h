@@ -9,5 +9,6 @@ void putchar(char c);
 void * malloc(int bytes);
 void free(void * p);
 void scanf(char * buffer, int bytes);
+void fractal();
 
 #endif

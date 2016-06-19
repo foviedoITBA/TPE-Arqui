@@ -5,9 +5,11 @@
 #define BACKSPACE 8
 
 extern void * _malloc(int bytes);
+extern void _free(void * p);
 extern void _write(char * buffer, int size);
 extern void _read(volatile char * key_holder, int bytes);
 extern void _remove_char();
+extern void _fractal();
 
 int strlen(char s[])
 {
@@ -150,6 +152,7 @@ static void read(char * buffer, int bytes)
 	}
 }
 
+/* No es el scanf standard de C */
 void scanf(char * buffer, int bytes)
 {
 	read(buffer, bytes);
@@ -162,5 +165,10 @@ void * malloc(int bytes)
 
 void free(void * p)
 {
-	return;
+	_free(p);
+}
+
+void fractal()
+{
+	_fractal();
 }

@@ -15,7 +15,8 @@ int main(void)
 		for (int i = 0; buffer[i] != '\0' && i < 1000; i++)
 			buffer[i] = '\0';
 		scanf(buffer, 1000);
-		
+		if (buffer[0] == '\n')
+			continue;
 		int j;
 		for (j = 0; buffer[j] != ' ' && buffer[j] != '\n' && j < 25; j++)
 			command[j] = buffer[j];
@@ -23,7 +24,9 @@ int main(void)
 		if (buffer[j] == '\n')
 		{
 			if (strcmp(command, "help") == 0)
-				printf("The available commands are:\n\thelp\n\techo <message>\n");
+				printf("The available commands are:\n\thelp\n\techo <message>\n\tfractal\n");
+			else if (strcmp(command, "fractal") == 0)
+				fractal();
 			else
 				invalid_command_msg(buffer);
 		}
@@ -40,8 +43,6 @@ int main(void)
 		}
 		else 
 			invalid_command_msg(buffer);
-
-
 	}
 	free(buffer);
 	free(command);

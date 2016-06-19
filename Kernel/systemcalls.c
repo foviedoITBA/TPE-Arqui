@@ -2,16 +2,18 @@
 #include "interrupts.h"
 #include "interruptsASM.h"
 #include "videoDriver.h"
+#include "bga.h"
 
 #define SYSTEMCALLS_VECTOR 0x80
 #define BACKSPACE 8
 
-static uint64_t (*syscalls[5])();
+static uint64_t (*syscalls[6])();
 static uint64_t sys_write(uint64_t buffer, uint64_t bytes);
 static uint64_t sys_read(uint64_t key_holder, uint64_t bytes);
 static uint64_t sys_malloc(uint64_t bytes);
 static uint64_t sys_free();
 static uint64_t sys_remove_char();
+static uint64_t sys_fractal();
 
 typedef enum {FALSE = 0, TRUE} BOOL;
 
@@ -30,6 +32,7 @@ void setupSystemcalls()
 	syscalls[2] = sys_malloc;
 	syscalls[3] = sys_free;
 	syscalls[4] = sys_remove_char;
+	syscalls[5] = sys_fractal;
 	add_IDT_descriptor(SYSTEMCALLS_VECTOR, (uint64_t) _systemcalls_ISR);
 }
 
@@ -82,5 +85,11 @@ static uint64_t sys_free()
 static uint64_t sys_remove_char()
 {
 	video_remove_char();
+	return 0;
+}
+
+static uint64_t sys_fractal()
+{
+	print_fractal();
 	return 0;
 }

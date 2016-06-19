@@ -3,6 +3,7 @@ global _read
 global _malloc
 global _free
 global _remove_char
+global _fractal
 section .text
 _write:
 	push rbp
@@ -62,6 +63,14 @@ _remove_char:
 	push rbp
 	mov rbp, rsp
 	mov rax, 4	;sys_remove_char
+	int 80h		;system call
+	leave
+	ret
+
+_fractal:
+	push rbp
+	mov rbp, rsp
+	mov rax, 5	;sys_fractal
 	int 80h		;system call
 	leave
 	ret
