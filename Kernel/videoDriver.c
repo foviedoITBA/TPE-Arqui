@@ -1,7 +1,7 @@
 #include "videoDriver.h"
 
 #define SCREEN_WIDTH 80
-#define SCREEN_HEIGHT 24 /* Last row reserver for clock */
+#define SCREEN_HEIGHT 24 /* Last row reserved for clock */
 #define BLACK_ON_BLACK 0
 #define WHITE_ON_BLACK 7
 #define FOREGROUND_INTENSITY_MASK 0x8
@@ -12,6 +12,7 @@
 static char *video = (char *) 0xB8000;
 static int position = 0;
 
+/* Checks whether the screen should me scrolled and does it if necessary */
 static void check_position()
 {
 	if (position == SCREEN_WIDTH*SCREEN_HEIGHT)
@@ -39,6 +40,7 @@ void clear_screen()
 	reset_position();
 }
 
+/* Sets de writing position to the start of the screen */
 void reset_position()
 {
 	position = 0;

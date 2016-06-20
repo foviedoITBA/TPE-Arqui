@@ -2,7 +2,6 @@ include Makefile.inc
 
 KERNEL=kernel.bin
 SOURCES=$(wildcard *.c)
-SOURCES_ASM=$(wildcard asm/*.asm)
 INTERRUPTS_ASM=interruptsASM.asm
 RTC_ASM=RTC.asm
 IO_ASM=IO_ASM.asm
